@@ -7,11 +7,13 @@ import Clients from './components/Clients.js';
 import AsideMenu from './components/AsideMenu.js';
 import Footer from './components/Footer.js';
 import Offline from './components/Offline.js';
+import Splash from './pages/Splash.js';
 
 
 function App() {
   const [items, setItems] = React.useState([]);
   const [offlineStatus, setOfflineStatus] = React.useState(!navigator.onLine);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   function handleOfflineStatus(){
     setOfflineStatus(!navigator.onLine);
@@ -40,6 +42,10 @@ function App() {
     window.addEventListener('online', handleOfflineStatus);
     window.addEventListener('offline', handleOfflineStatus);
 
+    setTimeout(function(){
+      setIsLoading(false);
+    },1500);
+
     return function(){
       window.removeEventListener('online', handleOfflineStatus)
       window.removeEventListener('offline', handleOfflineStatus)
@@ -48,8 +54,11 @@ function App() {
 
   return (
   //shortcut fragment (hal ini dikarenakan pada react tidak memperbolehkan merturn components lebih dari satu)
-    <> 
-    {offlineStatus && <Offline />}
+    <>
+    {isLoading === true ? <Splash /> :
+    (
+      <>
+      {offlineStatus && <Offline />}
       <Header />
       <Hero />
       <Browse />
@@ -57,6 +66,7 @@ function App() {
       <Clients />
       <AsideMenu />
       <Footer />
+      </>)}
     </>
   );
 }
